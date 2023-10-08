@@ -10,7 +10,7 @@ from langchain.schema.messages import BaseMessageChunk
 from langchain.text_splitter import CharacterTextSplitter
 from langchain.schema.runnable import RunnablePassthrough
 
-from config import OPENAI_KEY, DB_PATH
+from config import DB_PATH
 
 
 def custom_load(dataset_path: str) -> list[Document]:
@@ -32,7 +32,7 @@ def get_answer(api_token: str, question: str) -> BaseMessageChunk:
 
     llm = ChatOpenAI(
         model_name="gpt-3.5-turbo-16k",
-        openai_api_key=OPENAI_KEY,
+        openai_api_key=api_token,
         temperature=0.5,
         max_tokens=2048
     )
