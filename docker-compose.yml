@@ -1,0 +1,32 @@
+version: '3.9'
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    container_name: test_api
+    command: uvicorn main:app --workers 2 --host 0.0.0.0 --port 8011 --reload
+    ports:
+      - "8011:8011"
+    volumes:
+      - .:/usr/src/
+    env_file:
+      - .env
+
+  celery:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+    container_name: test_queue
+    command: celery -A tasks worker -c 2 --prefetch-multiplier 3 --loglevel=info
+    volumes:
+      - .:/usr/src/
+    env_file:
+      - .env
+    depends_on:
+      - redis
+
+  redis:
+    image: redis:6-alpine
+    container_name: test_redis_prod
